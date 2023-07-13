@@ -7,5 +7,6 @@ public class Product {
 
     private String productID;   // "000A"
     private int price;          // 25000
+    private String prodGrpId;   // HOME0001
 
 }

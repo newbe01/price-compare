@@ -1,5 +1,6 @@
 package com.example.pricecompareredis.service;
 
+import com.example.pricecompareredis.vo.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,13 @@ public class LowestPriceServiceImpl implements LowestPriceService{
         return tempSet;
     }
 
+    public int setNewProduct(Product product) {
+
+        int rank = 0;
+
+        redisTemplate.opsForZSet().add(product.getProdGrpId(), product.getProductID(), product.getPrice());
+        rank = redisTemplate.opsForZSet().rank(product.getProdGrpId(), product.getProductID()).intValue();
+
+        return rank;
+    }
 }
