@@ -37,4 +37,9 @@ public class LowestPriceController {
         return lowestPriceService.setNewProductGrpToKeyword(keyword, prodGrpId, score);
     }
 
+    @GetMapping("/productPrice/lowest")
+    public Keyword getLowestPriceProductByKeyword(String keyword) {
+        return lowestPriceService.GetLowestPriceProductByKeyword(keyword);
+    }
+
 }
