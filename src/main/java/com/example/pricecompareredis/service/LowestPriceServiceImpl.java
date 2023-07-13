@@ -1,11 +1,13 @@
 package com.example.pricecompareredis.service;
 
 import com.example.pricecompareredis.vo.Product;
+import com.example.pricecompareredis.vo.ProductGrp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,6 +25,7 @@ public class LowestPriceServiceImpl implements LowestPriceService{
         return tempSet;
     }
 
+    @Override
     public int setNewProduct(Product product) {
 
         int rank = 0;
@@ -32,4 +35,27 @@ public class LowestPriceServiceImpl implements LowestPriceService{
 
         return rank;
     }
+
+    @Override
+    public int setNewProductGrp(ProductGrp productGrp) {
+
+        List<Product> product = productGrp.getProductList();
+        String productId = product.get(0).getProductID();
+        int price = product.get(0).getPrice();
+
+        redisTemplate.opsForZSet().add(productGrp.getProdGrpId(), productId, price);
+
+        return redisTemplate.opsForZSet().zCard(productGrp.getProdGrpId()).intValue();
+    }
+
+    @Override
+    public int setNewProductGrpToKeyword(String keyword, String prodGrpId, double score) {
+
+        redisTemplate.opsForZSet().add(keyword, prodGrpId, score);
+
+        int rank = redisTemplate.opsForZSet().rank(keyword, prodGrpId).intValue();
+
+        return rank;
+    }
+
 }
