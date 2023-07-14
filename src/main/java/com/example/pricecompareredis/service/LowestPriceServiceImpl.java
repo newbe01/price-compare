@@ -17,10 +17,13 @@ public class LowestPriceServiceImpl implements LowestPriceService{
     private RedisTemplate redisTemplate;
 
     @Override
-    public Set getZsetValue(String key) {
+    public Set getZsetValue(String key) throws Exception {
 
         Set tempSet = new HashSet();
         tempSet = redisTemplate.opsForZSet().rangeWithScores(key, 0, 9);
+        if (tempSet.size() < 1) {
+            throw new Exception("Key doesn't have any member");
+        }
 
         return tempSet;
     }

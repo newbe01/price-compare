@@ -5,7 +5,9 @@ import com.example.pricecompareredis.vo.Keyword;
 import com.example.pricecompareredis.vo.Product;
 import com.example.pricecompareredis.vo.ProductGrp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Set;
 
@@ -18,8 +20,11 @@ public class LowestPriceController {
 
     @GetMapping("/getZSETValue")
     public Set GetZsetValue(String key) {
-
-        return lowestPriceService.getZsetValue(key);
+        try {
+            return lowestPriceService.getZsetValue(key);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PutMapping("/product")
